@@ -9,10 +9,12 @@ var gyroscopeChart = {}
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
-    if (connected) {
+    if (connected)
+    {
         $("#conversation").show();
     }
-    else {
+    else
+    {
         $("#conversation").hide();
     }
     $("#greetings").html("");
@@ -23,17 +25,15 @@ function connect() {
 
     var socket = new SockJS('/microsocket');
     stompClient = Stomp.over(socket);
- var topic = $('#topic').val()
+    var topic = $('#topic').val()
     stompClient.connect({}, function (frame) {
-        setConnected(true);
-        console.log('Connected: ' + frame);
+    setConnected(true);
+    console.log('Connected: ' + frame);
 
-
-        console.log('subscribing to /topic/' + topic)
-        stompClient.subscribe('/topic/' + topic, function (greeting) {
-                    showGreeting(greeting.body);
+    console.log('subscribing to /topic/' + topic)
+    stompClient.subscribe('/topic/' + topic, function (greeting) {
+                    showTopicResponse(greeting.body);
                 });
-
     });
 }
 
@@ -45,30 +45,19 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
- var topic = $('#topic').val()
- alert(topic    )
-    stompClient.send("/app/hello/"+ topic, {}, JSON.stringify({'name': $("#name").val()}));
- //    stompClient.send("/app/hello", {}, JSON.stringify({'name': $("#name").val()}));
+function showTopicResponse(message)
+{
 
-}
+    mess = JSON.parse(message)
+    //console.log(mess)
 
-function showGreeting(message) {
-
-//message2 = message.replace('\\{','').replace('\\"','"').replace('"}','}').replace(String.fromCharCode(92),'')
-mess = JSON.parse(message)
-console.log(mess)
-
-
-   // $("#greetings").append("<tr><td>" + mess+ "</td></tr>");
     if(x++ == 0)
     {
-    var temp  =  MakeXYZChart(mess['compass'], 'CompassChart',compass)
-    compass = temp.config;
-    compassChart = temp.chart;
+        var temp  =  MakeXYZChart(mess['compass'], 'CompassChart',compass)
+        compass = temp.config;
+        compassChart = temp.chart;
 
-
-    var temp  =  MakeXYZChart(mess['gyroscope'], 'GyroscopeChart',gyroscopeConfig)
+        var temp  =  MakeXYZChart(mess['gyroscope'], 'GyroscopeChart',gyroscopeConfig)
         gyroscopeConfig = temp.config;
         gyroscopeChart= temp.chart;
 
