@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 @EnableScheduling
 @Controller
-public class GreetingController {
+public class WebsocketController {
 
     private int x;
     @Autowired
@@ -50,7 +50,7 @@ public class GreetingController {
     /**
      *
      */
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 100000)
     public void kafkaConsumer() {
 
         Properties props = new Properties();
@@ -67,7 +67,7 @@ public class GreetingController {
         int x = 0;
         consumer.subscribe(r);
         try {
-            while(x++ < 130) {
+            while(x++ < 10000) {
                 ConsumerRecords<String, String> records = consumer.poll(Long.MAX_VALUE);
                 for (TopicPartition partition : records.partitions()) {
                     List<ConsumerRecord<String, String>> partitionRecords = records.records(partition);

@@ -4,8 +4,28 @@ var compass = {}
 var compassChart = {}
 var gyroscopeConfig = {}
 var gyroscopeChart = {}
+var accelerometerConfig = [];
+$(function()
+{
 
-
+toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-bottom-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
+});
 function setConnected(connected) {
     $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
@@ -50,16 +70,21 @@ function showTopicResponse(message)
 
     mess = JSON.parse(message)
     //console.log(mess)
+    if(mess.hasOwnProperty('compass'))
+    {
 
     if(x++ == 0)
     {
-        var temp  =  MakeXYZChart(mess['compass'], 'CompassChart',compass)
+        var temp  =  MakeXYZChart(mess['compass'], 'CompassChart',compass, 'Compass x,y,z')
         compass = temp.config;
         compassChart = temp.chart;
 
-        var temp  =  MakeXYZChart(mess['gyroscope'], 'GyroscopeChart',gyroscopeConfig)
+        var temp  =  MakeXYZChart(mess['gyroscope'], 'GyroscopeChart',gyroscopeConfig, 'Gyroscope')
         gyroscopeConfig = temp.config;
         gyroscopeChart= temp.chart;
+
+        accelerometerConfig  =  MakeMeshChart(mess['accelerometer'], 'accelerometerChart',accelerometerConfig)
+
 
 
 
@@ -67,16 +92,26 @@ function showTopicResponse(message)
     }
     AddXYZChart(mess['compass'], compass,compassChart)
     AddXYZChart(mess['gyroscope'], gyroscopeConfig,gyroscopeChart)
+    AddMeshChart(mess['accelerometer'],'accelerometerChart',accelerometerConfig)
 
-
-    if(x > 10)
+    if(x > 15)
     {
     $("#greetings  tr:first-child").remove();
 
      RemoveXYZChart(mess['compass'],compass,compassChart)
     RemoveXYZChart(mess['gyroscope'], gyroscopeConfig,gyroscopeChart)
+     RemoveMeshChart('accelerometerChart',accelerometerConfig)
     }
 
+
+}else if(mess.hasOwnProperty('button'))
+              {
+             var action = 'success'
+              if(mess['button'] == 'held')
+                action = 'error'
+              toastr[action](mess['direction'])
+
+              }
 
 }
 
@@ -92,37 +127,67 @@ window.chartColors = {
 	grey: 'rgb(201, 203, 207)'
 };
 
+
+function MakeMeshChart(rawData, chartName,config)
+{
+
+a=[]; b=[]; c=[];
+
+config = [
+      {
+      opacity:0.8,
+      color:'rgb(300,100,200)',
+      type: 'mesh3d',
+      x: a,
+      y: b,
+      z: c,
+    }]
+Plotly.newPlot(chartName, config,{},{displayModeBar: false});
+
+return config;
+}
+
+function AddMeshChart(data,webChart,config)
+{
+config[0].x.push(data['x'])
+config[0].y.push(data['y'])
+config[0].z.push(data['z'])
+Plotly.redraw(webChart);
+}
 function AddXYZChart(data,objConfig,objChart)
 {
 objConfig.data.datasets[0].data.push(data['x'])
 objConfig.data.datasets[1].data.push(data['y'])
 //objChart.data.datasets[2].push(data['z'])
-var month = MONTHS[objConfig.data.labels.length % MONTHS.length];
 
+console.log(objConfig.data.datasets[0].data)
 
-
-objConfig.data.labels.push(month)
-console.log('adding' + data['x'])
+//objConfig.data.labels.push(month)
 objChart.update()
 }
-
+function RemoveMeshChart(data,config)
+{
+config[0].x.shift()
+config[0].y.shift()
+config[0].z.shift()
+}
 function RemoveXYZChart(data,objConfig,objChart)
 {
 objConfig.data.datasets[0].data.shift()
 objConfig.data.datasets[1].data.shift()
-objConfig.data.labels.splice(-1, 1)
+//objConfig.data.labels.splice(-1, 1)
 //objChart.data.datasets[2].pop()
 objChart.update()
 }
 
-function MakeXYZChart(data,chart, objConfig,objChart ){
+function MakeXYZChart(data,chart, objConfig,objChart, chartText ){
 
 var objConfig = {
 			type: 'line',
 			data: {
-				labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+				labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '4', '15'],
 				datasets: [{
-					label: 'My First dataset',
+					label: 'X',
 					backgroundColor: window.chartColors.red,
 					borderColor: window.chartColors.red,
 					data: [
@@ -130,7 +195,7 @@ var objConfig = {
 					],
 					fill: false,
 				}, {
-					label: 'My Second dataset',
+					label: 'Y',
 					fill: false,
 					backgroundColor: window.chartColors.blue,
 					borderColor: window.chartColors.blue,
@@ -143,7 +208,7 @@ var objConfig = {
 				responsive: true,
 				title: {
 					display: true,
-					text: 'Chart.js Line Chart'
+					text: chartText
 				},
 
 				hover: {
