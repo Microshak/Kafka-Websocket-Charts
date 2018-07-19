@@ -27,7 +27,7 @@ toastr.options = {
 }
 });
 function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
+   /* $("#connect").prop("disabled", connected);
     $("#disconnect").prop("disabled", !connected);
     if (connected)
     {
@@ -38,6 +38,7 @@ function setConnected(connected) {
         $("#conversation").hide();
     }
     $("#greetings").html("");
+    */
 }
 
 function connect() {
@@ -45,13 +46,12 @@ function connect() {
 
     var socket = new SockJS('/microsocket');
     stompClient = Stomp.over(socket);
-    var topic = $('#topic').val()
+    var topic = getUrlVars()['device']
     stompClient.connect({}, function (frame) {
     setConnected(true);
-    console.log('Connected: ' + frame);
 
     console.log('subscribing to /topic/' + topic)
-    stompClient.subscribe('/topic/' + topic, function (greeting) {
+     stompClient.subscribe('/topic/' + topic, function (greeting) {
                     showTopicResponse(greeting.body);
                 });
     });
@@ -247,12 +247,9 @@ return {'config':objConfig, 'chart':objChart};
 }
 
 $(function () {
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-    $( "#connect" ).click(function() { connect(); });
-    $( "#disconnect" ).click(function() { disconnect(); });
-    $( "#send" ).click(function() { sendName(); });
+
+
+   connect();
 });
 
 
@@ -260,7 +257,13 @@ $(function () {
 
 
 
-
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
 
 
 

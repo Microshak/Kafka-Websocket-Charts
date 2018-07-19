@@ -44,7 +44,12 @@ public class WebsocketController {
     @CrossOrigin(origins = "http://localhost:3000")
     @MessageMapping("/hello/{topic}")
     @SendTo("/topic/{topic}")
-    public void subscribeToTopic(@DestinationVariable String topic) throws Exception {}
+    public void subscribeToTopic(@DestinationVariable String topic) throws Exception
+    {
+
+
+
+    }
 
 
     /**
@@ -55,7 +60,7 @@ public class WebsocketController {
 
         Properties props = new Properties();
         props.put("bootstrap.servers", ip);
-        props.put("group.id", "test");
+        props.put("group.id", "web");
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "1000");
         props.put("session.timeout.ms", "30000");
@@ -63,6 +68,7 @@ public class WebsocketController {
         props.put("value.deserializer","org.apache.kafka.common.serialization.StringDeserializer");
 
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+
         Pattern r = Pattern.compile("^device.*");
         int x = 0;
         consumer.subscribe(r);

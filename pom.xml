@@ -81,6 +81,18 @@
 			<version>1.1.0</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<version>9.0.10</version>
+		</dependency>
+        <!-- JSTL for JSP -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
 	</dependencies>
 
 	<build>
@@ -89,6 +101,54 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+
+
+
+
+
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<version>0.1.5</version>
+				<configuration>
+					<authentication>
+						<serverId>azure-auth</serverId>
+					</authentication>
+					<resourceGroup>maven-plugin</resourceGroup>
+					<appName>maven-web-app-${maven.build.timestamp}</appName>
+					<region>westus</region>
+					<javaVersion>1.8</javaVersion>
+					<deploymentType>ftp</deploymentType>
+					<stopAppDuringDeployment>true</stopAppDuringDeployment>
+					<resources>
+						<resource>
+							<directory>${project.basedir}/target</directory>
+							<targetPath>/</targetPath>
+							<includes>
+								<include>*.jar</include>
+							</includes>
+						</resource>
+						<resource>
+							<directory>${project.basedir}</directory>
+							<targetPath>/</targetPath>
+							<includes>
+								<include>web.config</include>
+							</includes>
+						</resource>
+					</resources>
+				</configuration>
+			</plugin>
+
+
+
+
+
+
+
+
+
+
 		</plugins>
 	</build>
 

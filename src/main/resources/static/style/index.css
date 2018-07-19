@@ -1,0 +1,106 @@
+.card {
+  padding-top: 20px;
+  margin: 10px 0 20px 0;
+  background-color: #ffffff;
+  border: 1px solid #d8d8d8;
+  border-top-width: 0;
+  border-bottom-width: 2px;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+  -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.container
+{
+margin-top:60px;
+}
+.cardTop {
+    height: 150px;
+    padding-top: 5px;
+    background-color: silver;
+}
+.card.hovercard {
+    position: relative;
+    width: 272px;
+    padding-top: 0;
+    overflow: hidden;
+    text-align: center;
+    background-color: #fff;
+    float: left;
+    margin: 13px 0px 0px 16px;
+    }
+
+.card.hovercard img {
+  width: 300px;
+  height: 200px;
+}
+
+.device-icon {
+    background: #3498db;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    padding: 17px 9px 0px 11px;
+    position: absolute;
+    left: 50%;
+    margin-left: -42px;
+    /* bottom: -58px; */
+    /* text-align: center; */
+}
+.card.hovercard .avatar {
+    position: relative;
+    top: -78px;
+    margin-bottom: -63px;
+    left: 102px;
+}
+.card.hovercard .avatar img {
+    width: 100px;
+    height: 100px;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 0%;
+    padding-top: 20px;
+}
+.card.hovercard .info {
+  padding: 4px 8px 10px;
+}
+
+.card.hovercard .info .title {
+  margin-bottom: 4px;
+  font-size: 24px;
+  line-height: 1;
+  color: #262626;
+  vertical-align: middle;
+}
+
+.card.hovercard .info .desc {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 20px;
+  color: #737373;
+  text-overflow: ellipsis;
+}
+
+.card.hovercard .bottom {
+  padding: 0 20px;
+  margin-bottom: 17px;
+}
+
+.card.people .card-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: inline-block;
+  width: 100%;
+  padding: 10px 20px;
+  line-height: 29px;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
