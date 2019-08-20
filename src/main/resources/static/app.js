@@ -5,6 +5,7 @@ var compassChart = {}
 var gyroscopeConfig = {}
 var gyroscopeChart = {}
 var accelerometerConfig = [];
+var accelerometerConfig2 = 0;
 $(function()
 {
 
@@ -75,24 +76,24 @@ function showTopicResponse(message)
 
     if(x++ == 0)
     {
-        var temp  =  MakeXYZChart(mess['compass'], 'CompassChart',compass, 'Compass x,y,z')
+        var temp  =  MakeXYZChart(mess['compass'], 'CompassChart', 'Compass x,y,z')
         compass = temp.config;
         compassChart = temp.chart;
 
-        var temp  =  MakeXYZChart(mess['gyroscope'], 'GyroscopeChart',gyroscopeConfig, 'Gyroscope')
+        var temp  =  MakeXYZChart(mess['gyroscope'], 'GyroscopeChart','Gyroscope')
         gyroscopeConfig = temp.config;
         gyroscopeChart= temp.chart;
 
-        accelerometerConfig  =  MakeMeshChart(mess['accelerometer'], 'accelerometerChart',accelerometerConfig)
+//        accelerometerConfig  =  MakeMeshChart(mess['accelerometer'], 'accelerometerChart',accelerometerConfig)
 
-
-
+    accelerometerConfig2  =  MakeGageChart(mess['accelerometer'], 'gd',accelerometerConfig2)
 
 
     }
     AddXYZChart(mess['compass'], compass,compassChart)
     AddXYZChart(mess['gyroscope'], gyroscopeConfig,gyroscopeChart)
-    AddMeshChart(mess['accelerometer'],'accelerometerChart',accelerometerConfig)
+   // AddMeshChart(mess['accelerometer'],'accelerometerChart',accelerometerConfig)
+    AddGageChart(mess['accelerometer'],'gd',accelerometerConfig2)
 
     if(x > 15)
     {
@@ -100,7 +101,9 @@ function showTopicResponse(message)
 
      RemoveXYZChart(mess['compass'],compass,compassChart)
     RemoveXYZChart(mess['gyroscope'], gyroscopeConfig,gyroscopeChart)
-     RemoveMeshChart('accelerometerChart',accelerometerConfig)
+    // RemoveMeshChart('accelerometerChart',accelerometerConfig)
+
+
     }
 
 
@@ -126,6 +129,24 @@ window.chartColors = {
 	purple: 'rgb(153, 102, 255)',
 	grey: 'rgb(201, 203, 207)'
 };
+function MakeGageChart(rawData, chartName, config)
+{
+var config = [{
+  "domain": {"x": [20000, 8], "y": [0, 1]}, "value": 0, "title": {"text": "Speed"},
+  "type": "indicator", "mode": "gauge+number", "delta": {"reference": 100},
+  "gauge": {"axis": {"range": [null, 100]}}}];
+
+var layout = {width: 600, height: 400};
+Plotly.newPlot(chartName,config,layout);
+
+return config
+}
+
+function AddGageChart(data,webChart,config)
+{
+config[0].value =  data['x'] * 100
+Plotly.redraw(webChart);
+}
 
 
 function MakeMeshChart(rawData, chartName,config)
@@ -160,7 +181,7 @@ objConfig.data.datasets[0].data.push(data['x'])
 objConfig.data.datasets[1].data.push(data['y'])
 //objChart.data.datasets[2].push(data['z'])
 
-console.log(objConfig.data.datasets[0].data)
+//console.log(objConfig.data.datasets[0].data)
 
 //objConfig.data.labels.push(month)
 objChart.update()
@@ -180,7 +201,7 @@ objConfig.data.datasets[1].data.shift()
 objChart.update()
 }
 
-function MakeXYZChart(data,chart, objConfig,objChart, chartText ){
+function MakeXYZChart(data,chart, chartText ){
 
 var objConfig = {
 			type: 'line',

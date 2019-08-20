@@ -21,18 +21,19 @@
 
 
 <div id="main-content" class="container" style="margin-top:40px;">
+<div class="chartContainer" >
 
+  <div id="gd"></div>
+</div>
 
 <div class="chartContainer" >
 <div id="accelerometerChart"></div>
 </div>
 <div class="chartContainer" >
 <canvas id="CompassChart"></canvas>
-
 </div>
 <div class="chartContainer" >
     <canvas id="GyroscopeChart"></canvas>
-
 </div>
 </div>
 

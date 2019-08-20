@@ -22,6 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		  <docker.image.prefix>kafkaIoTLab</docker.image.prefix>
 	</properties>
 
 	<dependencies>
@@ -105,39 +106,28 @@
 
 
 
-
-
-			<plugin>
-				<groupId>com.microsoft.azure</groupId>
-				<artifactId>azure-webapp-maven-plugin</artifactId>
-				<version>0.1.5</version>
+<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.0</version>
 				<configuration>
-					<authentication>
-						<serverId>azure-auth</serverId>
-					</authentication>
-					<resourceGroup>maven-plugin</resourceGroup>
-					<appName>maven-web-app-${maven.build.timestamp}</appName>
-					<region>westus</region>
-					<javaVersion>1.8</javaVersion>
-					<deploymentType>ftp</deploymentType>
-					<stopAppDuringDeployment>true</stopAppDuringDeployment>
-					<resources>
-						<resource>
-							<directory>${project.basedir}/target</directory>
-							<targetPath>/</targetPath>
-							<includes>
-								<include>*.jar</include>
-							</includes>
-						</resource>
-						<resource>
-							<directory>${project.basedir}</directory>
-							<targetPath>/</targetPath>
-							<includes>
-								<include>web.config</include>
-							</includes>
-						</resource>
-					</resources>
+					<!-- replace `callicoder` with your docker id-->
+					<repository>kafkaiotlab</repository>
+					<tag>${project.version}</tag>
+					<buildArgs>
+						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
 				</configuration>
+				<executions>
+					<execution>
+						<id>default</id>
+						<phase>install</phase>
+						<goals>
+							<goal>build</goal>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 
